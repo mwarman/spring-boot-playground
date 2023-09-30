@@ -1,4 +1,4 @@
-package net.leanstacks.todo.model;
+package net.leanstacks.todosvc.todo;
 
 public record Todo(long id, String title, boolean isComplete) {
 }

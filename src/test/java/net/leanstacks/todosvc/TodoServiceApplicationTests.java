@@ -1,10 +1,10 @@
-package net.leanstacks.todo;
+package net.leanstacks.todosvc;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class TodoApplicationTests {
+class TodoServiceApplicationTests {
 
 	@Test
 	void contextLoads() {

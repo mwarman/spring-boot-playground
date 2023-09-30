@@ -1,4 +1,4 @@
-package net.leanstacks.todo.controller;
+package net.leanstacks.todosvc.todo;
 
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import net.leanstacks.todo.model.Todo;
 
 @RestController
 @RequestMapping("/api/todos")

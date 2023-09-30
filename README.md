@@ -1,10 +1,20 @@
 # Spring Boot Playground
 
+This project is an example Spring Boot RESTful web service component.
+
 ## Getting Started
+
+### Dependencies
+
+- Java 17
 
 ## Installing
 
+Clone the project [repository](https://github.com/mwarman/spring-boot-playground). Open the project in your favorite code editor such as VS Code or Spring Tool Suite.
+
 ## Running
+
+To interact with the application, run any of the following commands from a terminal prompt in the project base directory.
 
 ### `bootRun`
 
