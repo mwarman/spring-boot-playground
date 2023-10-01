@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class TodoServiceBean implements TodoService {
@@ -40,6 +41,7 @@ public class TodoServiceBean implements TodoService {
     return todos;
   }
 
+  @Transactional
   @Override
   public Todo create(String title) {
     logger.info("> create");
@@ -50,6 +52,7 @@ public class TodoServiceBean implements TodoService {
     return savedTodo;
   }
 
+  @Transactional
   @Override
   public Optional<Todo> update(Todo todo) {
     logger.info("> update");
@@ -68,6 +71,7 @@ public class TodoServiceBean implements TodoService {
     return Optional.ofNullable(updatedTodo);
   }
 
+  @Transactional
   @Override
   public void delete(Long id) {
     logger.info("> delete");
