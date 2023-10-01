@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - changeSet:
+      id: 10
+      author: mwarman
+      comment: Create table Todo.
+      changes:
+        - createTable:
+            tableName: Todo
+            columns:
+              - column:
+                  name: id
+                  type: bigint(20)
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: isComplete
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
