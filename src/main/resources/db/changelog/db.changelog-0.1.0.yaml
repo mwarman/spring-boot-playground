@@ -25,3 +25,12 @@ databaseChangeLog:
                   defaultValueBoolean: false
                   constraints:
                     nullable: false
+  - changeSet:
+      id: 20
+      author: mwarman
+      comment: Initialize Todo data.
+      contextFilter: local, ci
+      changes:
+        - loadData:
+            file: db/changelog/todos-0.1.0.csv
+            tableName: Todo
