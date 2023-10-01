@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -66,7 +67,7 @@ public class TodoController {
   }
 
   @PutMapping("/{id}")
-  public Todo updateTodo(@PathVariable("id") long id, @RequestBody Todo todo) {
+  public Todo updateTodo(@PathVariable("id") Long id, @RequestBody Todo todo) {
     logger.info("> updateTodo");
 
     final Optional<Todo> updatedTodo = todoService.update(todo);
@@ -76,6 +77,17 @@ public class TodoController {
 
     logger.info("< updateTodo");
     return updatedTodo.get();
+  }
+
+  @DeleteMapping("/{id}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void deleteTodo(@PathVariable("id") Long id) {
+    logger.info("> deleteTodo");
+    logger.debug("id: {}", id);
+
+    todoService.delete(id);
+
+    logger.info("< deleteTodo");
   }
 
 }

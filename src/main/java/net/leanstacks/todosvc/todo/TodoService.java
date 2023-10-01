@@ -13,4 +13,6 @@ public interface TodoService {
 
   Optional<Todo> update(Todo todo);
 
+  void delete(Long id);
+
 }

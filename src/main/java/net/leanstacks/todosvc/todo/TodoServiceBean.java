@@ -69,4 +69,13 @@ public class TodoServiceBean implements TodoService {
     return Optional.ofNullable(updatedTodo);
   }
 
+  @Override
+  public void delete(Long id) {
+    logger.info("> delete");
+
+    todoRepository.deleteById(id);
+
+    logger.info("< delete");
+  }
+
 }
