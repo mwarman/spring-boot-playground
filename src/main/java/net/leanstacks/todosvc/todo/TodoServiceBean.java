@@ -46,6 +46,7 @@ public class TodoServiceBean implements TodoService {
     logger.info("> create");
 
     final Todo savedTodo = todoRepository.save(new Todo(title, false));
+
     logger.info("< create");
     return savedTodo;
   }
@@ -57,6 +58,7 @@ public class TodoServiceBean implements TodoService {
 
     Optional<Todo> savedTodo = this.find(todo.getId());
     if (savedTodo.isPresent()) {
+      logger.debug("Todo found. updating.");
       Todo todoToUpdate = savedTodo.get();
       todoToUpdate.setTitle(todo.getTitle());
       todoToUpdate.setIsComplete(todo.getIsComplete());
@@ -64,7 +66,7 @@ public class TodoServiceBean implements TodoService {
     }
 
     logger.info("< update");
-    return Optional.of(updatedTodo);
+    return Optional.ofNullable(updatedTodo);
   }
 
 }
