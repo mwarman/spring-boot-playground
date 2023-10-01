@@ -1,15 +1,16 @@
 package net.leanstacks.todosvc.todo;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TodoService {
 
-  Todo find(long id);
+  Optional<Todo> find(Long id);
 
   List<Todo> findAll();
 
   Todo create(String title);
 
-  Todo update(Todo todo);
+  Optional<Todo> update(Todo todo);
 
 }

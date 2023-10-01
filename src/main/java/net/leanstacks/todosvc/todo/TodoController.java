@@ -1,10 +1,12 @@
 package net.leanstacks.todosvc.todo;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api/todos")
@@ -36,21 +39,25 @@ public class TodoController {
   }
 
   @GetMapping("/{id}")
-  public Todo getTodo(@PathVariable("id") long id) {
+  public Todo getTodo(@PathVariable("id") Long id) {
     logger.info("> getTodo");
     logger.debug("id: {}", id);
 
-    final Todo todo = todoService.find(id);
+    final Optional<Todo> todo = todoService.find(id);
+
+    if (!todo.isPresent()) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.getReasonPhrase());
+    }
 
     logger.info("< getTodo");
-    return todo;
+    return todo.get();
   }
 
   @PostMapping
   public Todo createTodo(@RequestBody Todo todo) {
     logger.info("> createTodo");
 
-    final Todo createdTodo = todoService.create(todo.title());
+    final Todo createdTodo = todoService.create(todo.getTitle());
 
     logger.info("< createTodo");
     return createdTodo;
@@ -60,10 +67,13 @@ public class TodoController {
   public Todo updateTodo(@PathVariable("id") long id, @RequestBody Todo todo) {
     logger.info("> updateTodo");
 
-    final Todo updatedTodo = todoService.update(todo);
+    final Optional<Todo> updatedTodo = todoService.update(todo);
+    if (!updatedTodo.isPresent()) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.getReasonPhrase());
+    }
 
     logger.info("< updateTodo");
-    return updatedTodo;
+    return updatedTodo.get();
   }
 
 }
