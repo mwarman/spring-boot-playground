@@ -50,13 +50,39 @@ Cleans the project build artifacts.
 ./gradlew clean
 ```
 
+### `test`
+
+Runs all unit tests.
+
+```
+./gradlew test
+```
+
+### `check`
+
+Runs all source code checks.
+
+```
+./gradlew check
+```
+
+### `tasks`
+
+Lists all available Gradle tasks.
+
+```
+./gradlew tasks
+```
+
 ## Reference Documentation
 
 For further reference, please consider the following sections:
 
+- [Official Spring Boot Reference Documentation](https://docs.spring.io/spring-boot/docs/current/reference/html/index.html)
 - [Official Gradle documentation](https://docs.gradle.org)
 - [Spring Boot Gradle Plugin Reference Guide](https://docs.spring.io/spring-boot/docs/3.1.4/gradle-plugin/reference/html/)
 - [Create an OCI image](https://docs.spring.io/spring-boot/docs/3.1.4/gradle-plugin/reference/html/#build-image)
+- [Spring Projects](https://spring.io/projects)
 
 ### Additional Links
 
