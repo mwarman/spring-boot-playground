@@ -1,0 +1,51 @@
+package net.leanstacks.todosvc.todo;
+
+import java.io.Serializable;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
+public class Todo implements Serializable {
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+
+  @Column(nullable = false)
+  private String title;
+
+  @Column(nullable = false)
+  private boolean isComplete;
+
+  protected Todo() {
+  }
+
+  public Todo(String title, boolean isComplete) {
+    this.title = title;
+    this.isComplete = isComplete;
+  }
+
+  public Long getId() {
+    return this.id;
+  }
+
+  public String getTitle() {
+    return this.title;
+  }
+
+  public void setTitle(String title) {
+    this.title = title;
+  }
+
+  public boolean getIsComplete() {
+    return this.isComplete;
+  }
+
+  public void setIsComplete(boolean isComplete) {
+    this.isComplete = isComplete;
+  }
+}
