@@ -1,0 +1,27 @@
+= Spring Boot Playground API Documentation
+by Spring REST Docs
+:toc: left
+:toclevels: 2
+
+== Getting Started
+
+This is an example of API documentation generated with https://spring.io/projects/spring-restdocs[Spring REST Docs].
+
+[discrete]
+==== Base URL
+
+The API base URL is: `http://localhost:8080`.
+
+== Authentication
+
+Document how clients authenticate to the API.
+
+== Endpoints
+
+=== List Todos
+
+operation::list-todos[]
+
+=== Get Todo
+
+operation::get-todo[]
