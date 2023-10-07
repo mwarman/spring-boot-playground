@@ -7,8 +7,10 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
@@ -22,6 +24,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @WebMvcTest(TodoController.class)
 @AutoConfigureRestDocs
+@AutoConfigureJsonTesters
 public class TodoControllerDocTests {
 
   ParameterDescriptor idParameter = RequestDocumentation.parameterWithName("id").description("A todo identifier");
@@ -36,12 +39,15 @@ public class TodoControllerDocTests {
   @Autowired
   private MockMvc mvc;
 
+  @Autowired
+  private JacksonTester<Todo> json;
+
   @MockBean
   private TodoService todoService;
 
   @Test
   void listTodos() throws Exception {
-    // mock the service interaction
+    // set up the test
     List<Todo> responseTodos = new ArrayList<Todo>();
     Todo responseTodo = new Todo("Document an API", false);
     responseTodo.setId(Long.valueOf(1));
@@ -58,7 +64,7 @@ public class TodoControllerDocTests {
 
   @Test
   void getTodo() throws Exception {
-    // mock the service interaction
+    // set up the test
     Long todoId = Long.valueOf(1);
     Todo responseTodo = new Todo("Document an API", false);
     responseTodo.setId(todoId);
@@ -70,5 +76,27 @@ public class TodoControllerDocTests {
         .andDo(MockMvcRestDocumentation.document("get-todo", RequestDocumentation.pathParameters(idParameter),
             PayloadDocumentation
                 .responseFields(todo)));
+  }
+
+  @Test
+  void createTodo() throws Exception {
+    // set up the test
+    String requestBody = "{\"title\":\"Document an API\"}";
+
+    Long responseId = Long.valueOf(1);
+    Todo responseTodo = new Todo("Document an API", false);
+    responseTodo.setId(responseId);
+
+    BDDMockito.given(this.todoService.create("Document an API")).willReturn(responseTodo);
+
+    // invoke the controller
+    this.mvc
+        .perform(RestDocumentationRequestBuilders.post("/api/todos").contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON).content(requestBody))
+        .andExpect(MockMvcResultMatchers.status().isCreated())
+        .andDo(MockMvcRestDocumentation.document("create-todo",
+            PayloadDocumentation
+                .requestFields(title),
+            PayloadDocumentation.responseFields(todo)));
   }
 }

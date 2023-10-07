@@ -25,3 +25,7 @@ operation::list-todos[]
 === Get Todo
 
 operation::get-todo[]
+
+=== Create Todo
+
+operation::create-todo[]
