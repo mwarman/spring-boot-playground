@@ -39,11 +39,21 @@ dependencies {
 }
 
 ext {
-	snippitsDir = file('build/generated-snippets')
+	snippetsDir = file('build/generated-snippets')
+}
+
+bootJar {
+	dependsOn asciidoctor
+
+	from ("${asciidoctor.outputDir}") {
+		into "static/docs"
+	}
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+
+	outputs.dir snippetsDir
 
 	testLogging {
 		events "FAILED", "SKIPPED", "PASSED"
@@ -51,9 +61,7 @@ tasks.named('test') {
 }
 
 asciidoctor {
-	inputs.dir snippitsDir
+	inputs.dir snippetsDir
 	configurations 'asciidoctorExt'
-	attributes \
-		'snippits': file('build/generated-snippets')
 	dependsOn test
 }
