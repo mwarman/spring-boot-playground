@@ -33,3 +33,7 @@ operation::create-todo[]
 === Update Todo
 
 operation::update-todo[]
+
+=== Delete Todo
+
+operation::delete-todo[]

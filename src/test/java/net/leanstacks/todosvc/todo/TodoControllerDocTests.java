@@ -14,6 +14,8 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
@@ -126,5 +128,20 @@ public class TodoControllerDocTests {
             PayloadDocumentation
                 .requestFields(todo),
             PayloadDocumentation.responseFields(todo)));
+  }
+
+  @Test
+  void deleteTodo() throws Exception {
+    // set up the test
+    Long requestId = Long.valueOf(1);
+
+    BDDMockito.doNothing().when(this.todoService).delete(requestId);
+
+    // invoke the controller
+    this.mvc
+        .perform(
+            RestDocumentationRequestBuilders.delete("/api/todos/{id}", requestId))
+        .andExpect(MockMvcResultMatchers.status().is(HttpStatus.NO_CONTENT.value()))
+        .andDo(MockMvcRestDocumentation.document("delete-todo", RequestDocumentation.pathParameters(idParameter)));
   }
 }
