@@ -1,5 +1,7 @@
 package net.leanstacks.todosvc.todo;
 
+import static org.mockito.ArgumentMatchers.any;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -97,6 +99,32 @@ public class TodoControllerDocTests {
         .andDo(MockMvcRestDocumentation.document("create-todo",
             PayloadDocumentation
                 .requestFields(title),
+            PayloadDocumentation.responseFields(todo)));
+  }
+
+  @Test
+  void updateTodo() throws Exception {
+    // set up the test
+    Long requestId = Long.valueOf(1);
+    Todo requestTodo = new Todo("Document an API", true);
+    requestTodo.setId(requestId);
+    String requestBody = this.json.write(requestTodo).getJson();
+
+    Long responseId = Long.valueOf(1);
+    Todo responseTodo = new Todo("Document an API", true);
+    responseTodo.setId(responseId);
+
+    BDDMockito.given(this.todoService.update(any(Todo.class))).willReturn(Optional.of(responseTodo));
+
+    // invoke the controller
+    this.mvc
+        .perform(
+            RestDocumentationRequestBuilders.put("/api/todos/{id}", requestId).contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON).content(requestBody))
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andDo(MockMvcRestDocumentation.document("update-todo", RequestDocumentation.pathParameters(idParameter),
+            PayloadDocumentation
+                .requestFields(todo),
             PayloadDocumentation.responseFields(todo)));
   }
 }

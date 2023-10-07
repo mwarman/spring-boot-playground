@@ -29,3 +29,7 @@ operation::get-todo[]
 === Create Todo
 
 operation::create-todo[]
+
+=== Update Todo
+
+operation::update-todo[]
