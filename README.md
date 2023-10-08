@@ -18,20 +18,20 @@ To interact with the application, run any of the following commands from a termi
 
 ### `bootRun`
 
-Builds and runs the application.
+Runs this project as a Spring Boot application.
 
 ```
 ./gradlew bootRun
 ```
 
-The application is available available at base URL: http://localhost:8080. To test a specific endpoint, for example, fetching a single Todo, use the URL: http://localhost:8080/todos/1
+The application is available available at base URL: http://localhost:8080. To test a specific endpoint, for example, fetching a single Todo, use the URL: http://localhost:8080/api/todos/1
 
-### `build`
+### `bootJar`
 
-Builds the application and packages it as an executable JAR file.
+Assembles an executable jar archive containing the main classes and their dependencies.
 
 ```
-./gradlew build
+./gradlew bootJar
 ```
 
 The command produces build artifacts in the `./build` directory. The JAR file is created in `./build/libs`. For example, `todo-ws-0.0.1-SNAPSHOT.jar`.
@@ -44,15 +44,23 @@ java -jar build/libs/todo-ws-0.0.1-SNAPSHOT.jar
 
 ### `clean`
 
-Cleans the project build artifacts.
+Deletes the build directory.
 
 ```
 ./gradlew clean
 ```
 
+### `build`
+
+Assembles and tests this project.
+
+```
+./gradlew build
+```
+
 ### `test`
 
-Runs all unit tests.
+Runs the test suite.
 
 ```
 ./gradlew test
@@ -60,15 +68,25 @@ Runs all unit tests.
 
 ### `check`
 
-Runs all source code checks.
+Runs all checks.
 
 ```
 ./gradlew check
 ```
 
+### `asciidoctor`
+
+Runs all tests and produces API docs using AsciiDoc.
+
+```
+./gradlew asciidoctor
+```
+
+Documentation generated in `./build/docs/asciidoc`. The documentation is bundled into executable Jar files when built with `bootJar` and accessible at path `/docs/index.html`, e.g. http://localhost:8080/docs/index.html.
+
 ### `tasks`
 
-Lists all available Gradle tasks.
+Displays the Gradle tasks.
 
 ```
 ./gradlew tasks
