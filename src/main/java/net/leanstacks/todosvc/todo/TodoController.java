@@ -84,8 +84,16 @@ public class TodoController {
     return createdTodo;
   }
 
+  @Operation(summary = "Update a todo.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Updated the todo", content = {
+          @Content(mediaType = "application/json", schema = @Schema(implementation = Todo.class)) }),
+      @ApiResponse(responseCode = "400", description = "Invalid identifier or body content", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDetail.class))),
+      @ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDetail.class)))
+  })
   @PutMapping("/{id}")
-  public Todo updateTodo(@PathVariable("id") Long id, @RequestBody Todo todo) {
+  public Todo updateTodo(@Parameter(description = "The todo identifier") @PathVariable("id") Long id,
+      @RequestBody Todo todo) {
     logger.info("> updateTodo");
 
     final Optional<Todo> updatedTodo = todoService.update(todo);
