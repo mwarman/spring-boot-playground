@@ -18,6 +18,15 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name = "Todos", description = "The API endpoints for Todos.")
 @RestController
 @RequestMapping("/api/todos")
 public class TodoController {
@@ -40,16 +49,19 @@ public class TodoController {
     return todos;
   }
 
+  @Operation(summary = "Get a todo by its identifier.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Found the todo", content = {
+          @Content(mediaType = "application/json", schema = @Schema(implementation = Todo.class)) }),
+      @ApiResponse(responseCode = "400", description = "Invalid identifier", content = @Content),
+      @ApiResponse(responseCode = "404", description = "Not found", content = @Content)
+  })
   @GetMapping("/{id}")
-  public Todo getTodo(@PathVariable("id") Long id) {
+  public Todo getTodo(@Parameter(description = "The todo identifier") @PathVariable("id") Long id) {
     logger.info("> getTodo");
     logger.debug("id: {}", id);
 
     final Optional<Todo> todo = todoService.find(id);
-
-    if (!todo.isPresent()) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.getReasonPhrase());
-    }
 
     logger.info("< getTodo");
     return todo.get();
@@ -71,9 +83,6 @@ public class TodoController {
     logger.info("> updateTodo");
 
     final Optional<Todo> updatedTodo = todoService.update(todo);
-    if (!updatedTodo.isPresent()) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.getReasonPhrase());
-    }
 
     logger.info("< updateTodo");
     return updatedTodo.get();

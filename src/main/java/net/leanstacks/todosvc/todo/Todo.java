@@ -2,11 +2,14 @@ package net.leanstacks.todosvc.todo;
 
 import java.io.Serializable;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Entity
 public class Todo implements Serializable {
@@ -15,6 +18,8 @@ public class Todo implements Serializable {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @NotBlank
+  @Size(min = 0, max = 100)
   @Column(nullable = false)
   private String title;
 
@@ -29,10 +34,12 @@ public class Todo implements Serializable {
     this.isComplete = isComplete;
   }
 
+  @Schema(example = "5")
   public Long getId() {
     return this.id;
   }
 
+  @Schema(example = "Document the API")
   public String getTitle() {
     return this.title;
   }
@@ -41,6 +48,7 @@ public class Todo implements Serializable {
     this.title = title;
   }
 
+  @Schema(example = "true")
   public boolean getIsComplete() {
     return this.isComplete;
   }
