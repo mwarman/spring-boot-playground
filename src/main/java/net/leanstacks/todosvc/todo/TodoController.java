@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -25,6 +24,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import net.leanstacks.todosvc.ExceptionDetail;
 
 @Tag(name = "Todos", description = "The API endpoints for Todos.")
 @RestController
@@ -39,6 +39,12 @@ public class TodoController {
     this.todoService = todoService;
   }
 
+  @Operation(summary = "List all todos.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Fetched all todos", content = {
+          @Content(mediaType = "application/json", schema = @Schema(implementation = Todo.class)) }),
+      @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDetail.class)))
+  })
   @GetMapping
   public List<Todo> getTodos() {
     logger.info("> getTodos");
@@ -53,8 +59,8 @@ public class TodoController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Found the todo", content = {
           @Content(mediaType = "application/json", schema = @Schema(implementation = Todo.class)) }),
-      @ApiResponse(responseCode = "400", description = "Invalid identifier", content = @Content),
-      @ApiResponse(responseCode = "404", description = "Not found", content = @Content)
+      @ApiResponse(responseCode = "400", description = "Invalid identifier", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDetail.class))),
+      @ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDetail.class)))
   })
   @GetMapping("/{id}")
   public Todo getTodo(@Parameter(description = "The todo identifier") @PathVariable("id") Long id) {
