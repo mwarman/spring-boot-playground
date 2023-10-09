@@ -109,9 +109,14 @@ public class TodoController {
     return updatedTodo.get();
   }
 
+  @Operation(summary = "Delete a todo.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "204", description = "Success"),
+      @ApiResponse(responseCode = "400", description = "Invalid identifier", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDetail.class)))
+  })
   @DeleteMapping("/{id}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void deleteTodo(@PathVariable("id") Long id) {
+  public void deleteTodo(@Parameter(description = "The todo identifier") @PathVariable("id") Long id) {
     logger.info("> deleteTodo");
     logger.debug("id: {}", id);
 
