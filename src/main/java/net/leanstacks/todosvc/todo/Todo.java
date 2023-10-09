@@ -11,7 +11,6 @@ import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-@Schema(name = "Todo", description = "The todo object.")
 @Entity
 public class Todo implements Serializable {
 

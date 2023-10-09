@@ -29,6 +29,9 @@ public class TodoControllerTests {
   private JacksonTester<Todo> json;
 
   @Autowired
+  private JacksonTester<CreateTodoDto> createTodoJson;
+
+  @Autowired
   private TodoService todoService;
 
   @Test
@@ -55,9 +58,9 @@ public class TodoControllerTests {
   @Test
   void testCreateTodo(@Autowired MockMvc mvc) throws Exception {
     String url = "/api/todos";
-    Todo requestTodo = new Todo();
-    requestTodo.setTitle("Run tests");
-    String requestBody = this.json.write(requestTodo).getJson();
+    CreateTodoDto requestTodo = new CreateTodoDto("Run tests");
+    String requestBody = this.createTodoJson.write(requestTodo).getJson();
+    System.out.println(requestBody);
 
     MvcResult result = mvc.perform(
         MockMvcRequestBuilders.post(url).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
