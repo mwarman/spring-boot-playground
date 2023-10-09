@@ -24,6 +24,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import net.leanstacks.todosvc.ExceptionDetail;
 
 @Tag(name = "Todos", description = "The API endpoints for Todos.")
@@ -41,7 +42,7 @@ public class TodoController {
 
   @Operation(summary = "List all todos.")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Fetched all todos", content = {
+      @ApiResponse(responseCode = "200", description = "Success", content = {
           @Content(mediaType = "application/json", schema = @Schema(implementation = Todo.class)) }),
       @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDetail.class)))
   })
@@ -57,7 +58,7 @@ public class TodoController {
 
   @Operation(summary = "Get a todo by its identifier.")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Found the todo", content = {
+      @ApiResponse(responseCode = "200", description = "Success", content = {
           @Content(mediaType = "application/json", schema = @Schema(implementation = Todo.class)) }),
       @ApiResponse(responseCode = "400", description = "Invalid identifier", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDetail.class))),
       @ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDetail.class)))
@@ -73,12 +74,18 @@ public class TodoController {
     return todo.get();
   }
 
+  @Operation(summary = "Create a todo.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "201", description = "Success", content = {
+          @Content(mediaType = "application/json", schema = @Schema(implementation = Todo.class)) }),
+      @ApiResponse(responseCode = "400", description = "Invalid request content", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDetail.class)))
+  })
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public Todo createTodo(@RequestBody Todo todo) {
+  public Todo createTodo(@Valid @RequestBody CreateTodoDto todoDto) {
     logger.info("> createTodo");
 
-    final Todo createdTodo = todoService.create(todo.getTitle());
+    final Todo createdTodo = todoService.create(todoDto);
 
     logger.info("< createTodo");
     return createdTodo;
@@ -86,7 +93,7 @@ public class TodoController {
 
   @Operation(summary = "Update a todo.")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Updated the todo", content = {
+      @ApiResponse(responseCode = "200", description = "Success", content = {
           @Content(mediaType = "application/json", schema = @Schema(implementation = Todo.class)) }),
       @ApiResponse(responseCode = "400", description = "Invalid identifier or body content", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDetail.class))),
       @ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDetail.class)))

@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+@Schema(name = "Todo", description = "The todo object.")
 @Entity
 public class Todo implements Serializable {
 
@@ -18,7 +19,7 @@ public class Todo implements Serializable {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @NotBlank
+  @NotBlank(message = "title is required")
   @Size(min = 0, max = 100)
   @Column(nullable = false)
   private String title;
