@@ -18,20 +18,20 @@ To interact with the application, run any of the following commands from a termi
 
 ### `bootRun`
 
-Builds and runs the application.
+Runs this project as a Spring Boot application.
 
 ```
 ./gradlew bootRun
 ```
 
-The application is available available at base URL: http://localhost:8080. To test a specific endpoint, for example, fetching a single Todo, use the URL: http://localhost:8080/todos/1
+The application is available available at base URL: http://localhost:8080. To test a specific endpoint, for example, fetching a single Todo, use the URL: http://localhost:8080/api/todos/1
 
-### `build`
+### `bootJar`
 
-Builds the application and packages it as an executable JAR file.
+Assembles an executable jar archive containing the main classes and their dependencies.
 
 ```
-./gradlew build
+./gradlew bootJar
 ```
 
 The command produces build artifacts in the `./build` directory. The JAR file is created in `./build/libs`. For example, `todo-ws-0.0.1-SNAPSHOT.jar`.
@@ -44,15 +44,23 @@ java -jar build/libs/todo-ws-0.0.1-SNAPSHOT.jar
 
 ### `clean`
 
-Cleans the project build artifacts.
+Deletes the build directory.
 
 ```
 ./gradlew clean
 ```
 
+### `build`
+
+Assembles and tests this project.
+
+```
+./gradlew build
+```
+
 ### `test`
 
-Runs all unit tests.
+Runs the test suite.
 
 ```
 ./gradlew test
@@ -60,7 +68,7 @@ Runs all unit tests.
 
 ### `check`
 
-Runs all source code checks.
+Runs all checks.
 
 ```
 ./gradlew check
@@ -68,11 +76,19 @@ Runs all source code checks.
 
 ### `tasks`
 
-Lists all available Gradle tasks.
+Displays the Gradle tasks.
 
 ```
 ./gradlew tasks
 ```
+
+## API Documentation
+
+API documentation for this application is generated with [SpringDoc][springdoc]. Documentation is created during the build and packaged with the application. It is accessible when running the application locally with `bootRun` or when running the executable JAR created with `bootJar`.
+
+The Swagger UI is available at `[baseUrl]/api-docs/swagger-ui.html` and the OpenAPI 3.x specification is available at `[baseUrl]/api-docs`.
+
+For example, try http://localhost:8080/api-docs/swagger-ui.html or http://localhost:8080/api-docs
 
 ## Reference Documentation
 
@@ -83,9 +99,12 @@ For further reference, please consider the following sections:
 - [Spring Boot Gradle Plugin Reference Guide](https://docs.spring.io/spring-boot/docs/3.1.4/gradle-plugin/reference/html/)
 - [Create an OCI image](https://docs.spring.io/spring-boot/docs/3.1.4/gradle-plugin/reference/html/#build-image)
 - [Spring Projects](https://spring.io/projects)
+- [SpringDoc Reference Documentation][springdoc]
 
 ### Additional Links
 
 These additional references should also help you:
 
 - [Gradle Build Scans – insights for your project's build](https://scans.gradle.com#gradle)
+
+[springdoc]: https://springdoc.org/ 'SpringDoc'
