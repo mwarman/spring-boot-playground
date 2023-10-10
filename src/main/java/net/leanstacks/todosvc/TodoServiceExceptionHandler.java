@@ -12,12 +12,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import net.leanstacks.todosvc.todo.TodoServiceBean;
-
 @RestControllerAdvice
 public class TodoServiceExceptionHandler {
 
-  private static final Logger logger = LoggerFactory.getLogger(TodoServiceBean.class);
+  private static final Logger logger = LoggerFactory.getLogger(TodoServiceExceptionHandler.class);
 
   @ExceptionHandler(NoSuchElementException.class)
   @ResponseStatus(HttpStatus.NOT_FOUND)
