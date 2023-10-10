@@ -9,7 +9,7 @@ public interface TodoService {
 
   List<Todo> findAll();
 
-  Todo create(String title);
+  Todo create(CreateTodoDto todoDto);
 
   Optional<Todo> update(Todo todo);
 
