@@ -7,6 +7,8 @@ plugins {
 group = 'net.leanstacks'
 version = '0.0.1-SNAPSHOT'
 
+defaultTasks 'clean', 'build'
+
 java {
 	sourceCompatibility = '17'
 }

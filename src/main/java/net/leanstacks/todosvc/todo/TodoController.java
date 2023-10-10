@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/todos")
 public class TodoController {
@@ -52,10 +54,10 @@ public class TodoController {
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public Todo createTodo(@RequestBody Todo todo) {
+  public Todo createTodo(@Valid @RequestBody CreateTodoDto todoDto) {
     logger.info("> createTodo");
 
-    final Todo createdTodo = todoService.create(todo.getTitle());
+    final Todo createdTodo = todoService.create(todoDto);
 
     logger.info("< createTodo");
     return createdTodo;

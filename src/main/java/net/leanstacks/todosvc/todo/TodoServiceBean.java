@@ -43,10 +43,14 @@ public class TodoServiceBean implements TodoService {
 
   @Transactional
   @Override
-  public Todo create(String title) {
+  public Todo create(CreateTodoDto todoDto) {
     logger.info("> create");
 
-    final Todo savedTodo = todoRepository.save(new Todo(title, false));
+    Todo todoToSave = new Todo();
+    todoToSave.setTitle(todoDto.getTitle());
+    todoToSave.setIsComplete(false);
+
+    final Todo savedTodo = todoRepository.save(todoToSave);
 
     logger.info("< create");
     return savedTodo;
