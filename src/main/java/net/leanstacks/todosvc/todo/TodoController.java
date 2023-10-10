@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api/todos")
@@ -47,10 +46,6 @@ public class TodoController {
 
     final Optional<Todo> todo = todoService.find(id);
 
-    if (!todo.isPresent()) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.getReasonPhrase());
-    }
-
     logger.info("< getTodo");
     return todo.get();
   }
@@ -71,9 +66,6 @@ public class TodoController {
     logger.info("> updateTodo");
 
     final Optional<Todo> updatedTodo = todoService.update(todo);
-    if (!updatedTodo.isPresent()) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.getReasonPhrase());
-    }
 
     logger.info("< updateTodo");
     return updatedTodo.get();
