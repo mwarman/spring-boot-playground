@@ -19,7 +19,7 @@ public class Todo implements Serializable {
   private Long id;
 
   @NotBlank(message = "title is required")
-  @Size(min = 0, max = 100)
+  @Size(min = 1, max = 100, message = "title must contain 1 to 100 characters")
   @Column(nullable = false)
   private String title;
 
