@@ -45,7 +45,8 @@ public class TodoControllerTests {
     String url = "/api/todos/{id}";
     Long id = Long.valueOf(1);
 
-    MvcResult result = mvc.perform(MockMvcRequestBuilders.get(url, id).accept(MediaType.APPLICATION_JSON)).andReturn();
+    MvcResult result = mvc.perform(MockMvcRequestBuilders.get(url, id).accept(MediaType.APPLICATION_JSON))
+        .andReturn();
 
     Assertions.assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
     Todo responseTodo = this.json.parseObject(result.getResponse().getContentAsString());
@@ -59,10 +60,8 @@ public class TodoControllerTests {
     requestTodo.setTitle("Run tests");
     String requestBody = this.json.write(requestTodo).getJson();
 
-    MvcResult result = mvc.perform(
-        MockMvcRequestBuilders.post(url).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
-            .content(requestBody))
-        .andReturn();
+    MvcResult result = mvc.perform(MockMvcRequestBuilders.post(url).contentType(MediaType.APPLICATION_JSON)
+        .accept(MediaType.APPLICATION_JSON).content(requestBody)).andReturn();
 
     Assertions.assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.CREATED.value());
     Assertions.assertThat(result.getResponse().getHeader(HttpHeaders.CONTENT_TYPE))
@@ -84,10 +83,8 @@ public class TodoControllerTests {
     requestTodo.setIsComplete(true);
     String requestBody = this.json.write(requestTodo).getJson();
 
-    MvcResult result = mvc.perform(
-        MockMvcRequestBuilders.put(url, id).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
-            .content(requestBody))
-        .andReturn();
+    MvcResult result = mvc.perform(MockMvcRequestBuilders.put(url, id).contentType(MediaType.APPLICATION_JSON)
+        .accept(MediaType.APPLICATION_JSON).content(requestBody)).andReturn();
 
     Assertions.assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
     Assertions.assertThat(result.getResponse().getHeader(HttpHeaders.CONTENT_TYPE))
@@ -104,10 +101,10 @@ public class TodoControllerTests {
     String url = "/api/todos/{id}";
     Long id = Long.valueOf(1);
 
-    MvcResult result = mvc.perform(
-        MockMvcRequestBuilders.delete(url, id)).andReturn();
+    MvcResult result = mvc.perform(MockMvcRequestBuilders.delete(url, id)).andReturn();
 
-    Assertions.assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    Assertions.assertThat(result.getResponse().getStatus())
+        .isEqualTo(HttpStatus.NO_CONTENT.value());
     Assertions.assertThat(result.getResponse().getContentAsString().length()).isEqualTo(0);
 
     Optional<Todo> deletedTodo = todoService.find(id);

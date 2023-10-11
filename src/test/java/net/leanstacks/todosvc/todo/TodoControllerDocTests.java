@@ -30,121 +30,127 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @AutoConfigureJsonTesters
 public class TodoControllerDocTests {
 
-    ParameterDescriptor idParameter = RequestDocumentation.parameterWithName("id").description("A todo identifier");
+  ParameterDescriptor idParameter = RequestDocumentation.parameterWithName("id").description("A todo identifier");
 
-    FieldDescriptor id = PayloadDocumentation.fieldWithPath("id").description("The todo identifier");
-    FieldDescriptor title = PayloadDocumentation.fieldWithPath("title").description("The todo title");
-    FieldDescriptor body = PayloadDocumentation
-            .fieldWithPath("isComplete").description("Indicates if the todo has been completed");
+  FieldDescriptor id = PayloadDocumentation.fieldWithPath("id").description("The todo identifier");
+  FieldDescriptor title = PayloadDocumentation.fieldWithPath("title").description("The todo title");
+  FieldDescriptor body = PayloadDocumentation.fieldWithPath("isComplete")
+      .description("Indicates if the todo has been completed");
 
-    FieldDescriptor[] todo = new FieldDescriptor[] { id, title, body };
+  FieldDescriptor[] todo = new FieldDescriptor[] { id, title, body };
 
-    @Autowired
-    private MockMvc mvc;
+  @Autowired
+  private MockMvc mvc;
 
-    @Autowired
-    private JacksonTester<Todo> json;
+  @Autowired
+  private JacksonTester<Todo> json;
 
-    @MockBean
-    private TodoService todoService;
+  @Autowired
+  private JacksonTester<CreateTodoDto> createTodoDtoJson;
 
-    @Test
-    void listTodos() throws Exception {
-        // set up the test
-        List<Todo> responseTodos = new ArrayList<Todo>();
-        Todo responseTodo = new Todo("Document an API", false);
-        responseTodo.setId(Long.valueOf(1));
-        responseTodos.add(responseTodo);
-        BDDMockito.given(this.todoService.findAll()).willReturn(responseTodos);
+  @MockBean
+  private TodoService todoService;
 
-        // invoke the controller
-        this.mvc.perform(RestDocumentationRequestBuilders.get("/api/todos").accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andDo(MockMvcRestDocumentation.document("list-todos", PayloadDocumentation
-                        .responseFields(PayloadDocumentation.fieldWithPath("[]").description("An array of todos"))
-                        .andWithPrefix("[].", todo)));
-    }
+  @Test
+  void listTodos() throws Exception {
+    // set up the test
+    List<Todo> responseTodos = new ArrayList<Todo>();
+    Todo responseTodo = new Todo("Document an API", false);
+    responseTodo.setId(Long.valueOf(1));
+    responseTodos.add(responseTodo);
+    BDDMockito.given(this.todoService.findAll()).willReturn(responseTodos);
 
-    @Test
-    void getTodo() throws Exception {
-        // set up the test
-        Long todoId = Long.valueOf(1);
-        Todo responseTodo = new Todo("Document an API", false);
-        responseTodo.setId(todoId);
-        BDDMockito.given(this.todoService.find(todoId)).willReturn(Optional.of(responseTodo));
+    // invoke the controller
+    this.mvc
+        .perform(
+            RestDocumentationRequestBuilders.get("/api/todos").accept(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andDo(MockMvcRestDocumentation.document("list-todos",
+            PayloadDocumentation
+                .responseFields(
+                    PayloadDocumentation.fieldWithPath("[]").description("An array of todos"))
+                .andWithPrefix("[].", todo)));
+  }
 
-        // invoke the controller
-        this.mvc.perform(
-                RestDocumentationRequestBuilders.get("/api/todos/{id}", todoId).accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andDo(MockMvcRestDocumentation.document("get-todo", RequestDocumentation.pathParameters(idParameter),
-                        PayloadDocumentation
-                                .responseFields(todo)));
-    }
+  @Test
+  void getTodo() throws Exception {
+    // set up the test
+    Long todoId = Long.valueOf(1);
+    Todo responseTodo = new Todo("Document an API", false);
+    responseTodo.setId(todoId);
+    BDDMockito.given(this.todoService.find(todoId)).willReturn(Optional.of(responseTodo));
 
-    @Test
-    void createTodo() throws Exception {
-        // set up the test
-        String requestBody = "{\"title\":\"Document an API\"}";
+    // invoke the controller
+    this.mvc
+        .perform(RestDocumentationRequestBuilders
+            .get("/api/todos/{id}", todoId).accept(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andDo(MockMvcRestDocumentation.document("get-todo",
+            RequestDocumentation.pathParameters(idParameter),
+            PayloadDocumentation.responseFields(todo)));
+  }
 
-        Long responseId = Long.valueOf(1);
-        Todo responseTodo = new Todo("Document an API", false);
-        responseTodo.setId(responseId);
+  @Test
+  void createTodo() throws Exception {
+    // set up the test
+    CreateTodoDto requestTodo = new CreateTodoDto("Document an API");
+    String requestBody = this.createTodoDtoJson.write(requestTodo).getJson();
 
-        BDDMockito.given(this.todoService.create("Document an API")).willReturn(responseTodo);
+    Long responseId = Long.valueOf(1);
+    Todo responseTodo = new Todo("Document an API", false);
+    responseTodo.setId(responseId);
 
-        // invoke the controller
-        this.mvc
-                .perform(RestDocumentationRequestBuilders.post("/api/todos").contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON).content(requestBody))
-                .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andDo(MockMvcRestDocumentation.document("create-todo",
-                        PayloadDocumentation
-                                .requestFields(title),
-                        PayloadDocumentation.responseFields(todo)));
-    }
+    // BDDMockito.given(this.todoService.create(requestTodo)).willReturn(responseTodo);
+    BDDMockito.given(this.todoService.create(any(CreateTodoDto.class)))
+        .willReturn(responseTodo);
 
-    @Test
-    void updateTodo() throws Exception {
-        // set up the test
-        Long requestId = Long.valueOf(1);
-        Todo requestTodo = new Todo("Document an API", true);
-        requestTodo.setId(requestId);
-        String requestBody = this.json.write(requestTodo).getJson();
+    // invoke the controller
+    this.mvc
+        .perform(RestDocumentationRequestBuilders.post("/api/todos")
+            .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
+            .content(requestBody))
+        .andExpect(MockMvcResultMatchers.status().isCreated())
+        .andDo(MockMvcRestDocumentation.document("create-todo",
+            PayloadDocumentation.requestFields(title), PayloadDocumentation.responseFields(todo)));
+  }
 
-        Long responseId = Long.valueOf(1);
-        Todo responseTodo = new Todo("Document an API", true);
-        responseTodo.setId(responseId);
+  @Test
+  void updateTodo() throws Exception {
+    // set up the test
+    Long requestId = Long.valueOf(1);
+    Todo requestTodo = new Todo("Document an API", true);
+    requestTodo.setId(requestId);
+    String requestBody = this.json.write(requestTodo).getJson();
 
-        BDDMockito.given(this.todoService.update(any(Todo.class))).willReturn(Optional.of(responseTodo));
+    Long responseId = Long.valueOf(1);
+    Todo responseTodo = new Todo("Document an API", true);
+    responseTodo.setId(responseId);
 
-        // invoke the controller
-        this.mvc
-                .perform(
-                        RestDocumentationRequestBuilders.put("/api/todos/{id}", requestId)
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .accept(MediaType.APPLICATION_JSON).content(requestBody))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andDo(MockMvcRestDocumentation.document("update-todo",
-                        RequestDocumentation.pathParameters(idParameter),
-                        PayloadDocumentation
-                                .requestFields(todo),
-                        PayloadDocumentation.responseFields(todo)));
-    }
+    BDDMockito.given(this.todoService.update(any(Todo.class)))
+        .willReturn(Optional.of(responseTodo));
 
-    @Test
-    void deleteTodo() throws Exception {
-        // set up the test
-        Long requestId = Long.valueOf(1);
+    // invoke the controller
+    this.mvc
+        .perform(RestDocumentationRequestBuilders
+            .put("/api/todos/{id}", requestId).contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON).content(requestBody))
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andDo(MockMvcRestDocumentation.document("update-todo",
+            RequestDocumentation.pathParameters(idParameter),
+            PayloadDocumentation.requestFields(todo), PayloadDocumentation.responseFields(todo)));
+  }
 
-        BDDMockito.doNothing().when(this.todoService).delete(requestId);
+  @Test
+  void deleteTodo() throws Exception {
+    // set up the test
+    Long requestId = Long.valueOf(1);
 
-        // invoke the controller
-        this.mvc
-                .perform(
-                        RestDocumentationRequestBuilders.delete("/api/todos/{id}", requestId))
-                .andExpect(MockMvcResultMatchers.status().is(HttpStatus.NO_CONTENT.value()))
-                .andDo(MockMvcRestDocumentation.document("delete-todo",
-                        RequestDocumentation.pathParameters(idParameter)));
-    }
+    BDDMockito.doNothing().when(this.todoService).delete(requestId);
+
+    // invoke the controller
+    this.mvc.perform(RestDocumentationRequestBuilders.delete("/api/todos/{id}", requestId))
+        .andExpect(MockMvcResultMatchers.status().is(HttpStatus.NO_CONTENT.value()))
+        .andDo(MockMvcRestDocumentation.document("delete-todo",
+            RequestDocumentation.pathParameters(idParameter)));
+  }
 }
