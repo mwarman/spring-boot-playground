@@ -1,4 +1,4 @@
-package net.leanstacks.todosvc;
+package net.leanstacks.todosvc.exception;
 
 import java.util.NoSuchElementException;
 
@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-public class TodoServiceExceptionHandler {
+public class ApiExceptionHandler {
 
-  private static final Logger logger = LoggerFactory.getLogger(TodoServiceExceptionHandler.class);
+  private static final Logger logger = LoggerFactory.getLogger(ApiExceptionHandler.class);
 
   @ExceptionHandler(NoSuchElementException.class)
   @ResponseStatus(HttpStatus.NOT_FOUND)
