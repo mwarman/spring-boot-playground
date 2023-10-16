@@ -1,5 +1,9 @@
 package net.leanstacks.todosvc.security;
 
+import java.util.UUID;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -15,19 +19,25 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfiguration {
 
+  private static final Logger logger = LoggerFactory.getLogger(SecurityConfiguration.class);
+
   @Bean
   public InMemoryUserDetailsManager inMemoryUserDetailsManager() {
     // password encoding for demonstration purposes only
     // not suitable for production
     UserBuilder users = User.withDefaultPasswordEncoder();
+    UUID userPass = UUID.randomUUID();
+    logger.debug("\n\nGenerated user password: {}\n\n", userPass);
     UserDetails user = users
         .username("user")
-        .password("userpass")
+        .password(userPass.toString())
         .roles("USER")
         .build();
+    UUID adminPass = UUID.randomUUID();
+    logger.debug("\n\nGenerated admin password: {}\n\n", adminPass);
     UserDetails admin = users
         .username("admin")
-        .password("adminpass")
+        .password(adminPass.toString())
         .roles("ADMIN")
         .build();
     return new InMemoryUserDetailsManager(user, admin);
