@@ -3,6 +3,7 @@ package net.leanstacks.todosvc.todo;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
@@ -12,11 +13,16 @@ import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.request.RequestPostProcessor;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.WebApplicationContext;
 
 @SpringBootTest
 @Transactional
@@ -34,17 +40,30 @@ public class TodoControllerTests {
   @Autowired
   private TodoService todoService;
 
+  @Autowired
+  private WebApplicationContext context;
+
+  private MockMvc mvc;
+
+  @BeforeEach
+  public void beforeEach() {
+    mvc = MockMvcBuilders.webAppContextSetup(context).apply(SecurityMockMvcConfigurers.springSecurity()).build();
+  }
+
   @Test
-  void testGetTodos(@Autowired MockMvc mvc) throws Exception {
+  @WithMockUser
+  void testGetTodos() throws Exception {
     String url = "/api/todos";
-    MvcResult result = mvc.perform(MockMvcRequestBuilders.get(url).accept(MediaType.APPLICATION_JSON)).andReturn();
+    MvcResult result = mvc.perform(MockMvcRequestBuilders.get(url).accept(MediaType.APPLICATION_JSON))
+        .andReturn();
 
     Assertions.assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
     Assertions.assertThat(result.getResponse().getContentAsString().length()).isGreaterThan(0);
   }
 
   @Test
-  void testGetTodo(@Autowired MockMvc mvc) throws Exception {
+  @WithMockUser
+  void testGetTodo() throws Exception {
     String url = "/api/todos/{id}";
     Long id = Long.valueOf(1);
 
@@ -56,7 +75,8 @@ public class TodoControllerTests {
   }
 
   @Test
-  void testCreateTodo(@Autowired MockMvc mvc) throws Exception {
+  @WithMockUser
+  void testCreateTodo() throws Exception {
     String url = "/api/todos";
     CreateTodoDto requestTodo = new CreateTodoDto("Run tests");
     String requestBody = this.createTodoJson.write(requestTodo).getJson();
@@ -78,7 +98,8 @@ public class TodoControllerTests {
   }
 
   @Test
-  void testUpdateTodo(@Autowired MockMvc mvc) throws Exception {
+  @WithMockUser
+  void testUpdateTodo() throws Exception {
     String url = "/api/todos/{id}";
     Long id = Long.valueOf(1);
     String title = "Update test";
@@ -103,7 +124,8 @@ public class TodoControllerTests {
   }
 
   @Test
-  void testDeleteTodo(@Autowired MockMvc mvc) throws Exception {
+  @WithMockUser
+  void testDeleteTodo() throws Exception {
     String url = "/api/todos/{id}";
     Long id = Long.valueOf(1);
 

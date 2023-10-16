@@ -1,4 +1,4 @@
-package net.leanstacks.todosvc;
+package net.leanstacks.todosvc.exception;
 
 import org.springframework.http.HttpStatus;
 
