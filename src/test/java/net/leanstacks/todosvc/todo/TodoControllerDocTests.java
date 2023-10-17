@@ -22,6 +22,7 @@ import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.payload.PayloadDocumentation;
 import org.springframework.restdocs.request.ParameterDescriptor;
 import org.springframework.restdocs.request.RequestDocumentation;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -52,6 +53,7 @@ public class TodoControllerDocTests {
   private TodoService todoService;
 
   @Test
+  @WithMockUser
   void listTodos() throws Exception {
     // set up the test
     List<Todo> responseTodos = new ArrayList<Todo>();
@@ -73,6 +75,7 @@ public class TodoControllerDocTests {
   }
 
   @Test
+  @WithMockUser
   void getTodo() throws Exception {
     // set up the test
     Long todoId = Long.valueOf(1);
@@ -91,6 +94,7 @@ public class TodoControllerDocTests {
   }
 
   @Test
+  @WithMockUser
   void createTodo() throws Exception {
     // set up the test
     CreateTodoDto requestTodo = new CreateTodoDto("Document an API");
@@ -115,6 +119,7 @@ public class TodoControllerDocTests {
   }
 
   @Test
+  @WithMockUser
   void updateTodo() throws Exception {
     // set up the test
     Long requestId = Long.valueOf(1);
@@ -141,6 +146,7 @@ public class TodoControllerDocTests {
   }
 
   @Test
+  @WithMockUser
   void deleteTodo() throws Exception {
     // set up the test
     Long requestId = Long.valueOf(1);
