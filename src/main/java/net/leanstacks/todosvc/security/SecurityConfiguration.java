@@ -17,6 +17,10 @@ import org.springframework.security.core.userdetails.User.UserBuilder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
+
+@SecurityScheme(type = SecuritySchemeType.HTTP, name = "basicAuth", scheme = "basic")
 @Configuration
 @EnableWebSecurity
 @EnableConfigurationProperties(SecurityProperties.class)
@@ -65,6 +69,7 @@ public class SecurityConfiguration {
                 .requestMatchers("/api/todos/**").hasRole("USER")
                 .requestMatchers("/api/actuators/health").permitAll()
                 .requestMatchers("/api/actuators/**").hasRole("ADMIN")
+                .requestMatchers("/api-docs/**").permitAll()
                 .anyRequest().denyAll())
         .httpBasic(Customizer.withDefaults());
 

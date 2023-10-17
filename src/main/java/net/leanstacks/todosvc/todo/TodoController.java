@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,10 +22,12 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import net.leanstacks.todosvc.ExceptionDetail;
+import net.leanstacks.todosvc.exception.ExceptionDetail;
 
+@SecurityRequirement(name = "basicAuth")
 @Tag(name = "Todos", description = "The API endpoints for Todos.")
 @RestController
 @RequestMapping("/api/todos")
@@ -35,7 +36,6 @@ public class TodoController {
   private static final Logger logger = LoggerFactory.getLogger(TodoController.class);
   private final TodoService todoService;
 
-  @Autowired
   public TodoController(TodoService todoService) {
     this.todoService = todoService;
   }
@@ -44,7 +44,9 @@ public class TodoController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Success", content = {
           @Content(mediaType = "application/json", schema = @Schema(implementation = Todo.class)) }),
-      @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDetail.class)))
+      @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDetail.class))),
+      @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content()),
+      @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content())
   })
   @GetMapping
   public List<Todo> getTodos() {
@@ -61,6 +63,8 @@ public class TodoController {
       @ApiResponse(responseCode = "200", description = "Success", content = {
           @Content(mediaType = "application/json", schema = @Schema(implementation = Todo.class)) }),
       @ApiResponse(responseCode = "400", description = "Invalid identifier", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDetail.class))),
+      @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content()),
+      @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content()),
       @ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDetail.class)))
   })
   @GetMapping("/{id}")
@@ -78,7 +82,9 @@ public class TodoController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "Success", content = {
           @Content(mediaType = "application/json", schema = @Schema(implementation = Todo.class)) }),
-      @ApiResponse(responseCode = "400", description = "Invalid request content", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDetail.class)))
+      @ApiResponse(responseCode = "400", description = "Invalid request content", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDetail.class))),
+      @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content()),
+      @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content())
   })
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
@@ -96,6 +102,8 @@ public class TodoController {
       @ApiResponse(responseCode = "200", description = "Success", content = {
           @Content(mediaType = "application/json", schema = @Schema(implementation = Todo.class)) }),
       @ApiResponse(responseCode = "400", description = "Invalid identifier or body content", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDetail.class))),
+      @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content()),
+      @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content()),
       @ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDetail.class)))
   })
   @PutMapping("/{id}")
@@ -111,8 +119,10 @@ public class TodoController {
 
   @Operation(summary = "Delete a todo.")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "204", description = "Success"),
-      @ApiResponse(responseCode = "400", description = "Invalid identifier", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDetail.class)))
+      @ApiResponse(responseCode = "204", description = "Success", content = @Content()),
+      @ApiResponse(responseCode = "400", description = "Invalid identifier", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDetail.class))),
+      @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content()),
+      @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content())
   })
   @DeleteMapping("/{id}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
