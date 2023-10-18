@@ -14,7 +14,27 @@ The API base URL is: `http://localhost:8080`.
 
 == Authentication
 
-Document how clients authenticate to the API.
+The API endpoints are secured with Basic Authentication. Basic Authentication is a method for an 
+API client to provide a username and password when making a request.
+
+Credentials are passed in the `Authorization` HTTP request header. The credentials are  
+encoded in the header value. The header format is as follows:
+
+```
+Authorization: Basic <encoded-credentials>
+```
+
+To create the encoded credentials, perform the following steps:
+
+. Concatenate the username and password, separating them with a colon (`:`). For example: `user:password`
+. Encode the concatenated string in https://developer.mozilla.org/en-US/docs/Glossary/Base64[Base64].
+
+For example, if your username is `apiclient` and your password is `secret!`, authenticated requests 
+would use the following header:
+
+```
+Authorization: Basic YXBpZG9jczpzZWNyZXQh
+```
 
 == Endpoints
 
