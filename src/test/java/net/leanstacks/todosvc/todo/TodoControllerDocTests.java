@@ -97,7 +97,8 @@ public class TodoControllerDocTests {
     // invoke the controller
     this.mvc
         .perform(
-            RestDocumentationRequestBuilders.get("/api/todos").header("Authorization", authHeaderValue)
+            RestDocumentationRequestBuilders.get("/api/todos")
+                .header("Authorization", authHeaderValue)
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andDo(MockMvcRestDocumentation.document("list-todos",
@@ -120,7 +121,8 @@ public class TodoControllerDocTests {
     // invoke the controller
     this.mvc
         .perform(RestDocumentationRequestBuilders
-            .get("/api/todos/{id}", todoId).header("Authorization", authHeaderValue)
+            .get("/api/todos/{id}", todoId)
+            .header("Authorization", authHeaderValue)
             .accept(MediaType.APPLICATION_JSON))
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andDo(MockMvcRestDocumentation.document("get-todo",
@@ -147,8 +149,10 @@ public class TodoControllerDocTests {
     // invoke the controller
     this.mvc
         .perform(
-            RestDocumentationRequestBuilders.post("/api/todos").header("Authorization", authHeaderValue)
-                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
+            RestDocumentationRequestBuilders.post("/api/todos")
+                .header("Authorization", authHeaderValue)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
                 .content(requestBody))
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andDo(MockMvcRestDocumentation.document("create-todo",
@@ -175,9 +179,11 @@ public class TodoControllerDocTests {
     // invoke the controller
     this.mvc
         .perform(RestDocumentationRequestBuilders
-            .put("/api/todos/{id}", requestId).header("Authorization", authHeaderValue)
+            .put("/api/todos/{id}", requestId)
+            .header("Authorization", authHeaderValue)
             .contentType(MediaType.APPLICATION_JSON)
-            .accept(MediaType.APPLICATION_JSON).content(requestBody))
+            .accept(MediaType.APPLICATION_JSON)
+            .content(requestBody))
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andDo(MockMvcRestDocumentation.document("update-todo",
             HeaderDocumentation.requestHeaders(authorizationHeader, acceptJson, contentTypeJson),
@@ -195,10 +201,11 @@ public class TodoControllerDocTests {
 
     // invoke the controller
     this.mvc
-        .perform(RestDocumentationRequestBuilders.delete("/api/todos/{id}", requestId).header("Authorization",
-            authHeaderValue))
+        .perform(RestDocumentationRequestBuilders.delete("/api/todos/{id}", requestId)
+            .header("Authorization", authHeaderValue))
         .andExpect(MockMvcResultMatchers.status().is(HttpStatus.NO_CONTENT.value()))
-        .andDo(MockMvcRestDocumentation.document("delete-todo", HeaderDocumentation.requestHeaders(authorizationHeader),
+        .andDo(MockMvcRestDocumentation.document("delete-todo",
+            HeaderDocumentation.requestHeaders(authorizationHeader),
             RequestDocumentation.pathParameters(idParameter)));
   }
 }
