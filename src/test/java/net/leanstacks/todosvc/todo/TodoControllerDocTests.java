@@ -3,9 +3,11 @@ package net.leanstacks.todosvc.todo;
 import static org.mockito.ArgumentMatchers.any;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +21,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.headers.HeaderDescriptor;
 import org.springframework.restdocs.headers.HeaderDocumentation;
-import org.springframework.restdocs.headers.RequestHeadersSnippet;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.FieldDescriptor;
@@ -32,6 +33,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import jakarta.transaction.Transactional;
+import net.leanstacks.todosvc.security.SecurityProperties;
 
 @SpringBootTest
 @Transactional
@@ -57,8 +59,14 @@ public class TodoControllerDocTests {
 
   FieldDescriptor[] todo = new FieldDescriptor[] { id, title, body };
 
+  private static final String AUTH_USER = "user";
+  private String authHeaderValue;
+
   @MockBean
   private TodoService todoService;
+
+  @Autowired
+  private SecurityProperties securityProperties;
 
   @Autowired
   private JacksonTester<Todo> json;
@@ -68,6 +76,13 @@ public class TodoControllerDocTests {
 
   @Autowired
   private MockMvc mvc;
+
+  @BeforeEach
+  public void beforeEach() {
+    String authValue = AUTH_USER + ":" + securityProperties.getUserPassword();
+    String authValueEncoded = Base64.getEncoder().encodeToString(authValue.getBytes());
+    this.authHeaderValue = "Basic " + authValueEncoded;
+  }
 
   @Test
   @WithMockUser
@@ -82,7 +97,7 @@ public class TodoControllerDocTests {
     // invoke the controller
     this.mvc
         .perform(
-            RestDocumentationRequestBuilders.get("/api/todos").header("Authorization", "Basic dXNlcjpwYXNzd29yZA==")
+            RestDocumentationRequestBuilders.get("/api/todos").header("Authorization", authHeaderValue)
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andDo(MockMvcRestDocumentation.document("list-todos",
@@ -105,7 +120,7 @@ public class TodoControllerDocTests {
     // invoke the controller
     this.mvc
         .perform(RestDocumentationRequestBuilders
-            .get("/api/todos/{id}", todoId).header("Authorization", "Basic dXNlcjpwYXNzd29yZA==")
+            .get("/api/todos/{id}", todoId).header("Authorization", authHeaderValue)
             .accept(MediaType.APPLICATION_JSON))
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andDo(MockMvcRestDocumentation.document("get-todo",
@@ -132,7 +147,7 @@ public class TodoControllerDocTests {
     // invoke the controller
     this.mvc
         .perform(
-            RestDocumentationRequestBuilders.post("/api/todos").header("Authorization", "Basic dXNlcjpwYXNzd29yZA==")
+            RestDocumentationRequestBuilders.post("/api/todos").header("Authorization", authHeaderValue)
                 .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
                 .content(requestBody))
         .andExpect(MockMvcResultMatchers.status().isCreated())
@@ -160,7 +175,7 @@ public class TodoControllerDocTests {
     // invoke the controller
     this.mvc
         .perform(RestDocumentationRequestBuilders
-            .put("/api/todos/{id}", requestId).header("Authorization", "Basic dXNlcjpwYXNzd29yZA==")
+            .put("/api/todos/{id}", requestId).header("Authorization", authHeaderValue)
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON).content(requestBody))
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -181,7 +196,7 @@ public class TodoControllerDocTests {
     // invoke the controller
     this.mvc
         .perform(RestDocumentationRequestBuilders.delete("/api/todos/{id}", requestId).header("Authorization",
-            "Basic dXNlcjpwYXNzd29yZA=="))
+            authHeaderValue))
         .andExpect(MockMvcResultMatchers.status().is(HttpStatus.NO_CONTENT.value()))
         .andDo(MockMvcRestDocumentation.document("delete-todo", HeaderDocumentation.requestHeaders(authorizationHeader),
             RequestDocumentation.pathParameters(idParameter)));
