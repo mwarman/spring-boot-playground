@@ -82,6 +82,70 @@ Displays the Gradle tasks.
 ./gradlew tasks
 ```
 
+## Docker
+
+### Build the Image
+
+Build an image for this application from the `Dockerfile`. See the [Docker guide](https://docs.docker.com/engine/reference/commandline/build/) for additional details.
+
+**Usage:**
+
+```
+docker build [--tag <name>:<version>] .
+```
+
+**Examples:**
+
+```
+docker build --tag mwarman/sb-playground:1.0 .
+
+docker build --tag mwarman/sb-playground:latest .
+```
+
+### Start a Container
+
+Create and run a **new** container from an image. See the [Docker guide](https://docs.docker.com/engine/reference/commandline/container_run/) for additional details.
+
+**Usage:**
+
+```
+docker container run [OPTIONS] IMAGE
+```
+
+**Example: Run with Spring Profile**  
+Runs the application on port `8080` with the `ci` profile activated.
+
+```
+docker container run \
+  --publish 8080:8080 \
+  --env SPRING_PROFILES_ACTIVE=ci \
+  --name svc-todos \
+  mwarman/sb-playground:latest
+```
+
+**Example: Run on alternate port**  
+Maps container port `8080` to host port `8081`.
+
+```
+docker container run \
+  --publish 8081:8080 \
+  --env SPRING_PROFILES_ACTIVE=ci \
+  --name svc-todos \
+  mwarman/sb-playground:latest
+```
+
+**Example: Remove container after shutdown**  
+Automatically removes the container when shut down.
+
+```
+docker container run \
+  --publish 8081:8080 \
+  --env SPRING_PROFILES_ACTIVE=ci \
+  --name svc-todos \
+  --rm
+  mwarman/sb-playground:latest
+```
+
 ## Reference Documentation
 
 For further reference, please consider the following sections:
@@ -91,9 +155,12 @@ For further reference, please consider the following sections:
 - [Spring Boot Gradle Plugin Reference Guide](https://docs.spring.io/spring-boot/docs/3.1.4/gradle-plugin/reference/html/)
 - [Create an OCI image](https://docs.spring.io/spring-boot/docs/3.1.4/gradle-plugin/reference/html/#build-image)
 - [Spring Projects](https://spring.io/projects)
+- [Docker Reference Guides][docker-ref]
 
 ### Additional Links
 
 These additional references should also help you:
 
 - [Gradle Build Scans – insights for your project's build](https://scans.gradle.com#gradle)
+
+[docker-ref]: https://docs.docker.com/reference/ 'Docker Reference Guides'
