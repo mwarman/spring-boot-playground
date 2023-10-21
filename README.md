@@ -146,6 +146,34 @@ docker container run \
   mwarman/sb-playground:latest
 ```
 
+### Docker Compose
+
+The Docker Compose configuration is defined in the file `docker-compose.yml`. The compose file also includes dependencies, such as a PostgreSQL database container. Data is persisted on Docker volumes between restarts.
+
+To start the docker compose application stack, issue the following command:
+
+```
+# use the --build option the first time to create the Docker image
+docker compose up --build [--detach]
+
+# on subsequent starts, omit the --build option
+docker compose up [--detach]
+```
+
+The stack logs are printed directly to the console, unless started with `--detach`.
+
+Press `ctrl-C` or `cmd-C` to stop the stack.
+
+> **NOTE:** If started with `--detach` use `docker compose down` to stop the stack.
+
+To clean up all Docker compose stack resources, **including** volumes, run the following command even if the stack is stopped:
+
+```
+docker compose down -v
+```
+
+This is useful to reset the database back to an empty state.
+
 ## Reference Documentation
 
 For further reference, please consider the following sections:
