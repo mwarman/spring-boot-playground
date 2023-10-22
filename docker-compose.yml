@@ -1,0 +1,63 @@
+name: sb-playground-stack
+services:
+
+  app:
+    # build or use mwarman/sb-playground:latest
+    image: mwarman/sb-playground
+    build:
+      context: .
+    depends_on:
+      db:
+        condition: service_healthy
+    # override configuration
+    # use resources from docker compose stack
+    environment:
+      SPRING_PROFILES_ACTIVE: local
+      SPRING_DATASOURCE_URL: 'jdbc:mysql://db/todo'
+      SPRING_DATASOURCE_USERNAME: todosvc
+      SPRING_DATASOURCE_PASSWORD: 'Todo7Composed&'
+    restart: unless-stopped
+    networks:
+      - sb-playground-net
+    ports:
+      - '8080:8080'
+
+  db:
+    # use MySQL from Docker Hub
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: sbplayground
+      MYSQL_DATABASE: todo
+      MYSQL_USER: todosvc
+      MYSQL_PASSWORD: 'Todo7Composed&'
+    restart: always
+    networks:
+      - sb-playground-net
+    ports:
+      - 3306
+    volumes:
+      # persistent data volume
+      - sb-playground-db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-psbplayground"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  adminer:
+    # use Adminer (formerly PhpMyAdmin) from Docker Hub
+    image: adminer
+    restart: always
+    networks:
+      - sb-playground-net
+    ports:
+      - 8081:8080
+
+volumes:
+  # persistent Docker volume for the database
+  sb-playground-db:
+
+networks:
+  # Docker network for the stack
+  sb-playground-net:
