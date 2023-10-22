@@ -20,7 +20,7 @@ jobs:
           distribution: 'temurin'
       - uses: gradle/wrapper-validation-action@v1
       - uses: gradle/gradle-build-action@v2
-      - run: ./gradlew clean build -x test
+      - run: ./gradlew clean build -x test -x asciidoctor
 
   test:
     name: 'Test'

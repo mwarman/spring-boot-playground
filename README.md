@@ -80,6 +80,16 @@ Runs all checks.
 ./gradlew check
 ```
 
+### `asciidoctor`
+
+Runs all tests and produces API docs using AsciiDoc.
+
+```
+./gradlew asciidoctor
+```
+
+Documentation generated in `./build/docs/asciidoc`. The documentation is bundled into executable Jar files when built with `bootJar` and accessible at path `/docs/index.html`, e.g. http://localhost:8080/docs/index.html.
+
 ### `tasks`
 
 Displays the Gradle tasks.
