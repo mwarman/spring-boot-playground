@@ -154,9 +154,17 @@ docker container run \
 
 ### Docker Compose
 
-The Docker Compose configuration is defined in the file `docker-compose.yml`. The compose file also includes dependencies, such as a MySQL database container. Data is persisted on Docker volumes between restarts.
+The Docker Compose configuration is defined in the file `docker-compose.yml`. Data is persisted on Docker volumes between restarts.
 
-To start the docker compose application stack, issue the following command:
+The stack contains the following services:
+
+- The Spring Boot Application
+- MySQL 5.7
+- Adminer (formerly PhpMyAdmin)
+
+> **NOTE:** The Spring Boot application is accessible on port `8080` and Adminer on port `8081`.
+
+To start the docker compose stack, issue the following command:
 
 ```
 # optionally use the --build option the first time to create the Docker image
