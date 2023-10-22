@@ -2,17 +2,20 @@ name: sb-playground-stack
 services:
 
   app:
-    image: sb-playground
+    # build or use mwarman/sb-playground:latest
+    image: mwarman/sb-playground
     build:
       context: .
     depends_on:
       db:
         condition: service_healthy
+    # override configuration
+    # use resources from docker compose stack
     environment:
       SPRING_PROFILES_ACTIVE: local
       SPRING_DATASOURCE_URL: 'jdbc:mysql://db/todo'
       SPRING_DATASOURCE_USERNAME: todosvc
-      SPRING_DATASOURCE_PASSWORD: 'c0mP0sEd@459Gh'
+      SPRING_DATASOURCE_PASSWORD: 'Todo7Composed&'
     restart: unless-stopped
     networks:
       - sb-playground-net
@@ -26,7 +29,7 @@ services:
       MYSQL_ROOT_PASSWORD: sbplayground
       MYSQL_DATABASE: todo
       MYSQL_USER: todosvc
-      MYSQL_PASSWORD: 'c0mP0sEd@459Gh'
+      MYSQL_PASSWORD: 'Todo7Composed&'
     restart: always
     networks:
       - sb-playground-net
