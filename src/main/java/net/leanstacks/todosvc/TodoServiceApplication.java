@@ -21,7 +21,7 @@ public class TodoServiceApplication {
 	@Bean
 	public OpenAPI openAPI() {
 		return new OpenAPI()
-				.info(new Info().title("Spring Boot Playground API")
+				.info(new Info().version("1.0.0").title("Spring Boot Playground API")
 						.description("A playground project for a Spring Boot RESTful API application component.")
 						.termsOfService("https://leanstacks.net/terms.html")
 						.license(
