@@ -188,6 +188,14 @@ docker compose down -v
 
 This is useful to reset the database back to an empty state.
 
+## API Documentation
+
+API documentation for this application is generated with [SpringDoc][springdoc]. Documentation is created during the build and packaged with the application. It is accessible when running the application locally with `bootRun` or when running the executable JAR created with `bootJar`.
+
+The Swagger UI is available at `[baseUrl]/api-docs/swagger-ui.html` and the OpenAPI 3.x specification is available at `[baseUrl]/api-docs`.
+
+For example, try http://localhost:8080/api-docs/swagger-ui.html or http://localhost:8080/api-docs
+
 ## Reference Documentation
 
 For further reference, please consider the following sections:
@@ -198,6 +206,7 @@ For further reference, please consider the following sections:
 - [Create an OCI image](https://docs.spring.io/spring-boot/docs/3.1.4/gradle-plugin/reference/html/#build-image)
 - [Spring Projects](https://spring.io/projects)
 - [Docker Reference Guides][docker-ref]
+- [SpringDoc Reference Documentation][springdoc]
 
 ### Additional Links
 
@@ -206,3 +215,4 @@ These additional references should also help you:
 - [Gradle Build Scans – insights for your project's build](https://scans.gradle.com#gradle)
 
 [docker-ref]: https://docs.docker.com/reference/ 'Docker Reference Guides'
+[springdoc]: https://springdoc.org/ 'SpringDoc'

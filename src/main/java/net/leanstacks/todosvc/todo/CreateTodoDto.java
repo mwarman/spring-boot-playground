@@ -2,6 +2,7 @@ package net.leanstacks.todosvc.todo;
 
 import java.io.Serializable;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
@@ -19,6 +20,7 @@ public class CreateTodoDto implements Serializable {
     this.title = title;
   }
 
+  @Schema(example = "Document the API")
   public String getTitle() {
     return title;
   }
